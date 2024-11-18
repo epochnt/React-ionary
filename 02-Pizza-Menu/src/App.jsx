@@ -25,21 +25,27 @@ function Menu({ pizzas }) {
     <Pizza key={index} {...pizza} />
   ));
   return (
-    <menu className="menu">
-      <h2>Our Menu</h2>
-      <ul className="pizzas">{pizzaList}</ul>
-    </menu>
+    <>
+      <menu className="menu">
+        <h2>Our Menu</h2>
+        <p>
+          Authentic Italian cuisine. 6 creative dishes to choose from. All from
+          our stone oven, all organic, all delicious
+        </p>
+        <ul className="pizzas">{pizzaList}</ul>
+      </menu>
+    </>
   );
 }
 
-function Pizza({ name, ingredients, img, price }) {
+function Pizza({ name, ingredients, img, price, soldOut }) {
   return (
-    <li className="pizza">
+    <li className={`pizza ${soldOut ? "sold-out" : ""}`}>
       <img src={img} alt={name} />
       <div>
         <h3>{name}</h3>
         <p>{ingredients}</p>
-        <span>${price}</span>
+        <span>{soldOut ? "SOLD OUT" : `${price}`}</span>
       </div>
     </li>
   );
@@ -50,13 +56,21 @@ function Footer() {
   const openHour = 12;
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
-  console.log(isOpen);
-  // if (hour > openHour && hour < closeHour) alert("we are open");
 
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}. We are currently open. Copyright &copy;
-      2023 Fast React Pizza Co.
+      {isOpen ? (
+        <div className="order">
+          <p>
+            We are open until {closeHour}:00. Come visit us or order online.
+          </p>
+          <button className="btn">Order</button>
+        </div>
+      ) : (
+        <p>
+          We are happy to welcome you between {openHour}:00 and {closeHour}:00.
+        </p>
+      )}
     </footer>
   );
 }
