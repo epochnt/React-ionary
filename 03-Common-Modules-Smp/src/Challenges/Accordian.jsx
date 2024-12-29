@@ -17,21 +17,28 @@ const faqs = [
 ];
 
 export default function Accordian() {
+  const [openId, setOpenId] = useState(null);
   return (
     <div className="accordion">
       {faqs.map((faq, ind) => (
-        <AccordianItem key={ind} num={ind + 1} {...faq} />
+        <AccordianItem
+          key={ind}
+          num={ind + 1}
+          isOpen={openId === ind + 1}
+          setOpenId={setOpenId}
+          {...faq}
+        />
       ))}
     </div>
   );
 }
 
-function AccordianItem({ num, title, text }) {
-  const [isOpen, setIsOpen] = useState(false);
+function AccordianItem({ num, title, text, isOpen, setOpenId }) {
   return (
     <div
+      data-id={num}
       className={`item ${isOpen ? "open" : ""}`}
-      onClick={() => setIsOpen((accState) => !accState)}
+      onClick={() => setOpenId(isOpen ? null : num)}
     >
       <p className="number">{num < 10 ? `0${num}` : num}</p>
       <p className="title">{title}</p>
