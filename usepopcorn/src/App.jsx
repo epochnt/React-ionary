@@ -52,26 +52,33 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+  const [watched, setWatched] = useState(tempWatchedData);
   return (
     <>
-      <Navigation />
-      <Main />
+      <NavBar>
+        <Search />
+        <NumResults movies={movies} />
+      </NavBar>
+
+      <Main>
+        <Box>
+          <List data={movies} ListItem={MovieListItem} />
+        </Box>
+        <Box>
+          <Summary watched={watched} />
+          <List data={watched} ListItem={WatchedListItem} />
+        </Box>
+      </Main>
     </>
   );
 
-  function Main() {
-    return (
-      <main className="main">
-        <ListBox />
-        <WatchedBox />
-      </main>
-    );
+  function Main({ children }) {
+    return <main className="main">{children}</main>;
   }
 
-  function WatchedBox() {
-    const [watched, setWatched] = useState(tempWatchedData);
+  function Box({ children }) {
     const [isOpen, setIsOpen] = useState(true);
-
     return (
       <div className="box">
         <button
@@ -80,13 +87,18 @@ export default function App() {
         >
           {isOpen ? "–" : "+"}
         </button>
-        {isOpen && (
-          <>
-            <Summary watched={watched} />
-            <WatchedMovieList watched={watched} />
-          </>
-        )}
+        {isOpen && children}
       </div>
+    );
+  }
+
+  function List({ data, ListItem }) {
+    return (
+      <ul className="list">
+        {data.map((movie) => (
+          <ListItem key={movie.imdbID} movie={movie} />
+        ))}
+      </ul>
     );
   }
 
@@ -120,16 +132,6 @@ export default function App() {
     );
   }
 
-  function WatchedMovieList({ watched }) {
-    return (
-      <ul className="list">
-        {watched.map((movie) => (
-          <WatchedListItem key={movie.imdbID} movie={movie} />
-        ))}
-      </ul>
-    );
-  }
-
   function WatchedListItem({ movie }) {
     return (
       <li>
@@ -153,32 +155,6 @@ export default function App() {
     );
   }
 
-  function ListBox() {
-    const [movies, setMovies] = useState(tempMovieData);
-    const [isOpen, setIsOpen] = useState(true);
-    return (
-      <div className="box">
-        <button
-          className="btn-toggle"
-          onClick={() => setIsOpen((open) => !open)}
-        >
-          {isOpen ? "–" : "+"}
-        </button>
-        {isOpen && <MovieList movies={movies} />}
-      </div>
-    );
-  }
-
-  function MovieList({ movies }) {
-    return (
-      <ul className="list">
-        {movies.map((movie) => (
-          <MovieListItem key={movie.imdbID} movie={movie} />
-        ))}
-      </ul>
-    );
-  }
-
   function MovieListItem({ movie }) {
     return (
       <li>
@@ -194,12 +170,11 @@ export default function App() {
     );
   }
 
-  function Navigation() {
+  function NavBar({ children }) {
     return (
       <nav className="nav-bar">
         <Logo />
-        <Search />
-        <NumResults />
+        {children}
       </nav>
     );
   }
@@ -226,10 +201,10 @@ export default function App() {
     );
   }
 
-  function NumResults() {
+  function NumResults({ movies }) {
     return (
       <p className="num-results">
-        Found <strong>X</strong> results
+        Found <strong>{movies.length}</strong> results
       </p>
     );
   }
