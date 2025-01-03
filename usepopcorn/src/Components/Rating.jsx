@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const style = `
   .rating__container {
@@ -20,8 +21,6 @@ const style = `
   .star {
     display: block;
     cursor: pointer;
-    width: 3rem;
-    height: 3rem;
   }
 
   /* This will turn all stars highlighted when you hover just the parent and not the spans
@@ -33,26 +32,50 @@ const style = `
       fill: none;
     } 
   */
-
-
 `;
 
-export default function Rating({ maxRating = 5 }) {
-  const [rating, setRating] = useState(1);
+Rating.propTypes = {
+  maxRating: PropTypes.number,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  className: PropTypes.string,
+  messages: PropTypes.array,
+  defaultRating: PropTypes.number,
+  setGetRating: PropTypes.func,
+};
+
+export default function Rating({
+  maxRating = 5,
+  color = "#fcc419",
+  size = 48,
+  className = "",
+  messages = [],
+  defaultRating = 0,
+  setGetRating,
+}) {
+  const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
+
+  const textStyle = {
+    color: color,
+    fontSize: `${size / 1.5}px`,
+  };
 
   return (
     <div>
       <style>{style}</style>
-      <div className="rating__container">
+      <div className={`rating__container ${className}`}>
         <div className="rating__stars">
           {Array.from({ length: maxRating }, (_, i) => {
             return (
               <Star
                 key={i}
+                size={size}
+                color={color}
                 full={tempRating ? i < tempRating : i < rating}
                 clickHandler={() => {
                   setRating(i + 1);
+                  setGetRating && setGetRating(i + 1);
                 }}
                 mouseEnterHandler={() => {
                   setTempRating(i + 1);
@@ -64,7 +87,11 @@ export default function Rating({ maxRating = 5 }) {
             );
           })}
         </div>
-        <p className="rating__value">{tempRating || rating}</p>
+        <p className="rating__value" style={textStyle}>
+          {messages.length === maxRating
+            ? messages[tempRating ? tempRating - 1 : rating - 1]
+            : tempRating || rating}
+        </p>
       </div>
     </div>
   );
@@ -75,7 +102,13 @@ function Star({
   clickHandler,
   mouseEnterHandler,
   mouseLeaveHandler,
+  size,
+  color,
 }) {
+  const starStyle = {
+    width: `${size}px`,
+    height: `${size}px`,
+  };
   return (
     <span
       role="button"
@@ -86,9 +119,10 @@ function Star({
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        fill={full ? "black" : "none"}
+        fill={full ? color : "none"}
         viewBox="0 0 24 24"
-        stroke="#000"
+        stroke={color}
+        style={starStyle}
       >
         <path
           strokeLinecap="round"
