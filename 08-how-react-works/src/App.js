@@ -19,6 +19,7 @@ const content = [
 ];
 
 export default function App() {
+  console.log("App render");
   return (
     <div>
       <Tabbed content={content} />
@@ -39,7 +40,7 @@ function Tabbed({ content }) {
       </div>
 
       {activeTab <= 2 ? (
-        <TabContent item={content.at(activeTab)} />
+        <TabContent item={content.at(activeTab)} key={activeTab} />
       ) : (
         <DifferentContent />
       )}
@@ -48,6 +49,7 @@ function Tabbed({ content }) {
 }
 
 function Tab({ num, activeTab, onClick }) {
+  console.log("Tab render");
   return (
     <button
       className={activeTab === num ? "tab active" : "tab"}
