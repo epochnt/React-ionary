@@ -14,10 +14,30 @@ export default function Steps() {
 
   const handleNext = () => {
     if (step < 3) setStep((s) => s + 1);
+    /*
+      EOF: End of Function. After thoughts from lec
+      Using callback inside setState as it takes care
+      of concurrent updates. RN we don't have that case, but
+      
+      👉 For example in a function you receive state value in var val
+         and you  run it twice like this. Suppose val = 2
+        👉 setState(val + 1)  ⏩ wil set to 3
+        👉 setState(val + 1)  ⏩ wil also set to 3
 
-    // setTest({ name: "Nitin" });
-    //BAD PRACTICE
-    // test.name = "Nitin";
+        NOTE: 👆 Not a cocurrency example ❌ 
+        (actually is but not the cocurrency I mean, will add async example later).
+
+        So better use the actual value inside setState
+        which will also support the concurrency of the update operation
+    */
+
+    /*
+     GOOD PRACTICE 
+     setTest({ name: "Nitin" });
+      
+     BAD PRACTICE
+     test.name = "Nitin"; 
+    */
   };
 
   const handlePrevious = () => {
