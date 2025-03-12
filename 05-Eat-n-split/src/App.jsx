@@ -15,15 +15,11 @@ function App() {
   };
 
   const updateBalance = (id, amt) => {
-    console.log("called");
-    setFriends((friends) => {
-      console.log("update called");
-      return friends.map((friend) => {
-        friend.id === id
-          ? { ...friend, balance: friend.balance + amt }
-          : friend;
-      });
-    });
+    setFriends((friends) =>
+      friends.map((friend) =>
+        friend.id === id ? { ...friend, balance: friend.balance + amt } : friend
+      )
+    );
   };
 
   return (
@@ -36,7 +32,7 @@ function App() {
         <FormSplitBill
           updateBalance={updateBalance}
           friendId={activeId}
-          friendName="Clark"
+          friendName={getFriendName(activeId)}
         />
       )}
     </div>
@@ -68,16 +64,18 @@ function FriendCard({ id, name, image, balance, setActiveId }) {
       <h3>{name}</h3>
       {balance < 0 && (
         <p className="red">
-          You owe {name} -${balance}
+          You owe {name} -${-1 * balance}
         </p>
       )}
       {balance > 0 && (
         <p className="green">
-          {name} owes you${balance}
+          {name} owes you ${balance}
         </p>
       )}
       {balance === 0 && <p>You and {name} are even</p>}
-      <Button onClick={() => setActiveId(id)}>Select</Button>
+      <Button onClick={() => setActiveId((active) => (active === id ? 0 : id))}>
+        Select
+      </Button>
     </li>
   );
 }
@@ -128,33 +126,32 @@ function FormAddFriend({ addFriends }) {
 function FormSplitBill({ updateBalance, friendId, friendName }) {
   const [bill, setBill] = useState(0);
   const [userExpense, setUserExpense] = useState(0);
-  const [isLoaned, setIsLoaned] = useState(false);
+  const [isLoaned, setIsLoaned] = useState(true);
   const freindExpense = bill - userExpense;
 
   const handleSumit = (e) => {
     e.preventDefault();
-    if (!isLoaned) console.log(-userExpense);
     updateBalance(friendId, isLoaned ? freindExpense : -userExpense);
-    // setBill(0);
-    // setUserExpense(0);
+    setBill(0);
+    setUserExpense(0);
   };
 
   return (
     <form className="form-split-bill" onSubmit={handleSumit}>
-      <h2>Split a bill with your friends</h2>
+      <h2>Split a bill with {friendName}</h2>
 
       <label>💰 Bill Value</label>
       <input
         type="text"
         value={bill || ""}
-        onChange={(e) => setBill(e.target.value)}
+        onChange={(e) => setBill(Number(e.target.value))}
       />
 
       <label>🧍‍♂️ Your Expense</label>
       <input
         type="text"
         value={userExpense || ""}
-        onChange={(e) => setUserExpense(e.target.value)}
+        onChange={(e) => setUserExpense(Number(e.target.value))}
       />
 
       <label>👬 {friendName}'s' Expense</label>
