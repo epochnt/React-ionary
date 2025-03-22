@@ -38,6 +38,8 @@ function Header() {
     _self : undefined 
     _source : {fileName: '/home/nitin/React-ionary/02-Pizza-Menu/src/App.jsx', lineNumber: 36, columnNumber: 5}
   }
+
+  pizzaList = [{$$typeof : Symbol(react.element),....},{},{}..]
 */
 
 function Menu({ pizzas }) {
@@ -45,16 +47,14 @@ function Menu({ pizzas }) {
     <Pizza key={index} {...pizza} />
   ));
   return (
-    <>
-      <menu className="menu">
-        <h2>Our Menu</h2>
-        <p>
-          Authentic Italian cuisine. 6 creative dishes to choose from. All from
-          our stone oven, all organic, all delicious
-        </p>
-        <ul className="pizzas">{pizzaList}</ul>
-      </menu>
-    </>
+    <menu className="menu">
+      <h2>Our Menu</h2>
+      <p>
+        Authentic Italian cuisine. 6 creative dishes to choose from. All from
+        our stone oven, all organic, all delicious
+      </p>
+      <ul className="pizzas">{pizzaList}</ul>
+    </menu>
   );
 }
 
