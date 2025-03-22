@@ -30,6 +30,7 @@ function App() {
       </div>
       {Boolean(activeId) && (
         <FormSplitBill
+          key={activeId}
           updateBalance={updateBalance}
           friendId={activeId}
           friendName={getFriendName(activeId)}
