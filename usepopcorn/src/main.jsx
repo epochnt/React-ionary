@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
+import App from "./App-v1.jsx";
 import Rating from "./Components/Rating.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -13,6 +13,5 @@ createRoot(document.getElementById("root")).render(
       messages={["Terrible", "Bad", "Okay", "Good", "Great"]}
     /> */}
     <App />
-    cf h,/
   </StrictMode>
 );
