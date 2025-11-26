@@ -5,7 +5,7 @@ import pizzaData from "./assets/data";
 function App() {
   return (
     <div className="container">
-      <Header />
+      {[<Header />]}
       <Menu pizzas={pizzaData} />
       <Footer />
     </div>
