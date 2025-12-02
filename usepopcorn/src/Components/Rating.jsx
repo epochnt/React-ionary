@@ -90,7 +90,7 @@ export default function Rating({
         <p className="rating__value" style={textStyle}>
           {messages.length === maxRating
             ? messages[tempRating ? tempRating - 1 : rating - 1]
-            : tempRating || rating}
+            : tempRating || rating || ""}
         </p>
       </div>
     </div>
