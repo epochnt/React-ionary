@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./index.css";
 
 // For now directly accessing keys in the frontend code as this is a FE project
 // and not server is made for this repo. Keeping in separate env
 // as to not push to my repo
-const omdbApiKey = import.meta.env.VITE_OMDB_API_KEY;
+const OMDB_BASE_URL = import.meta.env.VITE_OMDB_URL;
+const OMDB_API_KEY = import.meta.env.VITE_OMDB_API_KEY;
 
 const tempMovieData = [
   {
@@ -60,9 +61,19 @@ export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
 
-  fetch(`http://www.omdbapi.com/?s=matrix&apikey=${omdbApiKey}`)
+  useEffect(function() {
+    fetch(`${OMDB_BASE_URL}?s=matrix&apikey=${OMDB_API_KEY}`)
     .then((res) => res.json())
-    .then((data) => console.log(data));
+    .then((data) => setMovies(data.Search));
+
+    return () => console.log('cleanup')
+  }, [])
+
+  
+
+  // fetch(`${OMDB_BASE_URL}?s=matrix&apikey=${OMDB_API_KEY}`)
+  //   .then((res) => res.json())
+  //   .then((data) => console.log(data));
   return (
     <>
       <NavBar>
