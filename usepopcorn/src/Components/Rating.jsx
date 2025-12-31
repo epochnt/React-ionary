@@ -41,7 +41,7 @@ Rating.propTypes = {
   className: PropTypes.string,
   messages: PropTypes.array,
   defaultRating: PropTypes.number,
-  setGetRating: PropTypes.func,
+  onSetRating: PropTypes.func,
 };
 
 export default function Rating({
@@ -51,7 +51,7 @@ export default function Rating({
   className = "",
   messages = [],
   defaultRating = 0,
-  setGetRating,
+  onSetRating,
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
@@ -75,7 +75,7 @@ export default function Rating({
                 full={tempRating ? i < tempRating : i < rating}
                 clickHandler={() => {
                   setRating(i + 1);
-                  setGetRating && setGetRating(i + 1);
+                  onSetRating && onSetRating(i + 1);
                 }}
                 mouseEnterHandler={() => {
                   setTempRating(i + 1);
