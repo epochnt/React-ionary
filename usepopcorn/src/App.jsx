@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useKey, useMovies, useLocalStorageState } from "./Hooks";
 import Rating from "./Components/Rating";
 import "./index.css";
 
@@ -11,15 +12,11 @@ const average = (arr) =>
   );
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [isloading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-  const [watched, setWatched] = useState(() => {
-    const watchedList = localStorage.getItem("watched");
-    return JSON.parse(watchedList);
-  });
+
+  const [movies, isloading, error] = useMovies(query);
+  const [watched, setWatched] = useLocalStorageState("watched", []);
 
   const handleSelectMovie = (id) => {
     setSelectedId((selectedId) => (selectedId === id ? null : id));
@@ -36,53 +33,6 @@ export default function App() {
   const handleDeleteWatched = (id) => {
     setWatched((movies) => movies.filter((m) => m.imdbID !== id));
   };
-
-  // This can now be converted to a eventhandler but we keep like this for learning
-  useEffect(
-    function () {
-      const controller = new AbortController();
-
-      async function fetchMovies() {
-        try {
-          setIsLoading(true);
-          setError("");
-
-          const res = await fetch(
-            `${OMDB_BASE_URL}?s=${query}&apiKey=${OMDB_API_KEY}`,
-            { signal: controller.signal }
-          );
-          if (!res.ok) throw new Error("Something went wrong while fetching");
-
-          const data = await res.json();
-          if (data.Response === "False") throw new Error(data.Error);
-
-          setMovies(data.Search);
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            console.log(err.message);
-            setError(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (query.length < 3) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-
-      handleCloseMovie();
-      fetchMovies();
-      return () => controller.abort();
-    },
-    [query]
-  );
-
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched]);
 
   return (
     <>
@@ -271,6 +221,8 @@ function MovieDetailView({ selectedId, onCloseMovie, onAddMovie, watched }) {
     onCloseMovie();
   };
 
+  useKey("Escape", onCloseMovie);
+
   useEffect(() => {
     async function fetchMovieDetails() {
       try {
@@ -299,15 +251,6 @@ function MovieDetailView({ selectedId, onCloseMovie, onAddMovie, watched }) {
     document.title = "🎬" + title;
     return () => (document.title = "🍿 usePopcorn");
   }, [title]);
-
-  useEffect(() => {
-    function callback(e) {
-      if (e.code === "Escape") onCloseMovie();
-    }
-
-    document.addEventListener("keydown", callback);
-    return () => document.removeEventListener("keydown", callback);
-  }, [onCloseMovie]);
 
   useEffect(() => {
     if (userRating) countDecision.current++;
@@ -383,18 +326,12 @@ function NavBar({ children }) {
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
-  useEffect(() => {
-    function callback(e) {
-      if (document.activeElement === inputEl.current) return;
-      if (e.code === "Enter") {
-        setQuery("");
-        inputEl.current.focus();
-      }
+  useKey("Enter", () => {
+    if (document.activeElement !== inputEl.current) {
+      setQuery("");
+      inputEl.current.focus();
     }
-
-    document.addEventListener("keydown", callback);
-    return () => document.removeEventListener("keydown", callback);
-  }, [setQuery]);
+  });
 
   return (
     <input
