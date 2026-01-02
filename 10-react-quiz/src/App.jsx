@@ -1,6 +1,60 @@
-import { Header } from "./Components";
+import { useEffect, useReducer } from "react";
+import { Header, Main } from "./Components";
+import { MOCK_JSON_API } from "./config";
 import "./index.css";
 
+const initialState = {
+  questions: [],
+
+  // loading, error, ready, active, finished
+  status: "loading",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "dataReceived":
+      return { ...state, questions: action.payload, status: "ready" };
+
+    case "dataFailed":
+      return { ...state, status: "error" };
+
+    default:
+      throw new Error("Unknown action received");
+  }
+}
+
 export default function App() {
-  return <Header />;
+  const [{ questions, statue }, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        const res = await fetch(MOCK_JSON_API);
+        if (!res.ok)
+          throw new Error(
+            `Mock fetch fail, check if the json-server in runing. HTTP status${res.status}`
+          );
+
+        const data = await res.json();
+        if (!data || !Object.keys(data).length)
+          throw new Error("No mock data found, check if json file is empty !");
+
+        dispatch({ type: "dataReceived", payload: data });
+      } catch (error) {
+        console.log(error.message);
+        dispatch({ type: "dataFailed" });
+      } 
+    }
+    fetchQuestions();
+  }, []);
+
+  return (
+    <div className="app">
+      <Header />
+      <Main>
+        <p>1/15</p>
+        <p>Qustions</p>
+      </Main>
+    </div>
+  );
 }
