@@ -1,8 +1,6 @@
-import DateCounter from './Components/DateCounter'
-import "./index.css"
+import { Header } from "./Components";
+import "./index.css";
 
 export default function App() {
-  return (
-    <DateCounter />
-  )
+  return <Header />;
 }
