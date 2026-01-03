@@ -1,11 +1,18 @@
 import { useEffect, useReducer } from "react";
-import { Header, Main, Loader, Error, StartScreen } from "./Components";
+import {
+  Header,
+  Main,
+  Loader,
+  Error,
+  StartScreen,
+  Question,
+} from "./components";
 import { MOCK_JSON_API } from "./config";
 import "./index.css";
 
 const initialState = {
   questions: [],
-
+  index: 0,
   // loading, error, ready, active, finished
   status: "loading",
 };
@@ -18,13 +25,16 @@ function reducer(state, action) {
     case "dataFailed":
       return { ...state, status: "error" };
 
+    case "start":
+      return { ...state, status: "active" };
+
     default:
       throw new Error("Unknown action received");
   }
 }
 
 export default function App() {
-  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index }, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -52,9 +62,12 @@ export default function App() {
     <div className="app">
       <Header />
       <Main>
-        {status == "loading" && <Loader />}
-        {status == "error" && <Error />}
-        {status == "ready" && <StartScreen numQues={questions.length} />}
+        {status === "loading" && <Loader />}
+        {status === "error" && <Error />}
+        {status === "ready" && (
+          <StartScreen numQues={questions.length} {...{ dispatch }} />
+        )}
+        {status === "active" && <Question {...questions[index]}/>}
       </Main>
     </div>
   );
