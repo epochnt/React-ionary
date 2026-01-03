@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { Header, Main } from "./Components";
+import { Header, Main, Loader, Error, StartScreen } from "./Components";
 import { MOCK_JSON_API } from "./config";
 import "./index.css";
 
@@ -24,7 +24,7 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ questions, statue }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status }, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -43,7 +43,7 @@ export default function App() {
       } catch (error) {
         console.log(error.message);
         dispatch({ type: "dataFailed" });
-      } 
+      }
     }
     fetchQuestions();
   }, []);
@@ -52,8 +52,9 @@ export default function App() {
     <div className="app">
       <Header />
       <Main>
-        <p>1/15</p>
-        <p>Qustions</p>
+        {status == "loading" && <Loader />}
+        {status == "error" && <Error />}
+        {status == "ready" && <StartScreen numQues={questions.length} />}
       </Main>
     </div>
   );

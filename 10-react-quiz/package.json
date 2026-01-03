@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server-json": "dotenv -e .env -- sh -c 'json-server --watch $JSON_SERVER_DATA/${npm_config_file}.json --port $VITE_JSON_SERVER_PORT'"
+    "server-json": "dotenv -e .env -- sh -c 'json-server $JSON_SERVER_DATA/${npm_config_file}.json --port $VITE_JSON_SERVER_PORT'"
   },
   "dependencies": {
     "react": "^19.2.0",
