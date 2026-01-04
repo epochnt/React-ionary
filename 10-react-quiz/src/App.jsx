@@ -8,6 +8,7 @@ import {
   Question,
   NextButton,
   StartScreen,
+  FinalScreen,
 } from "./components";
 import { MOCK_JSON_API } from "./config";
 import "./index.css";
@@ -16,6 +17,7 @@ const initialState = {
   questions: [],
   index: 0,
   points: 0,
+  highscore: 0,
   answer: null,
   // loading, error, ready, active, finished
   status: "loading",
@@ -47,19 +49,28 @@ function reducer(state, action) {
     case "nextQuestion":
       return { ...state, index: state.index + 1, answer: null };
 
+    case "finish":
+      return {
+        ...state,
+        status: "finished",
+        highscore:
+          state.points > state.highscore ? state.points : state.highscore,
+      };
+
     default:
       throw new Error("Unknown action received");
   }
 }
 
 export default function App() {
-  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, index, answer, points, highscore }, dispatch] =
+    useReducer(reducer, initialState);
 
   const numQues = questions.length;
-  const maxPoints = questions.reduce((acc, questions) => (acc += questions.points), 0);
+  const maxPoints = questions.reduce(
+    (acc, questions) => (acc += questions.points),
+    0
+  );
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -100,8 +111,11 @@ export default function App() {
               answer={answer}
               dispatch={dispatch}
             />
-            <NextButton {...{ dispatch, answer }} />
+            <NextButton {...{ dispatch, answer, index, numQues }} />
           </>
+        )}
+        {status === "finished" && (
+          <FinalScreen {...{ points, maxPoints, highscore }} />
         )}
       </Main>
     </div>

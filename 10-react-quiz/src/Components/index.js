@@ -7,3 +7,4 @@ export { default as Question } from "./Question";
 export { default as NextButton } from "./NextButton";
 export { default as DateCounter } from "./DateCounter";
 export { default as StartScreen } from "./StartScreen";
+export { default as FinalScreen } from "./FinalScreen";
