@@ -1,6 +1,8 @@
 export { default as Main } from "./Main";
 export { default as Error } from "./Error";
+export { default as Timer } from "./Timer";
 export { default as Header } from "./Header";
+export { default as Footer } from "./Footer";
 export { default as Loader } from "./Loader";
 export { default as Progress } from "./Progress";
 export { default as Question } from "./Question";

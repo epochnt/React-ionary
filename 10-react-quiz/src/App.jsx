@@ -2,7 +2,9 @@ import { useEffect, useReducer } from "react";
 import {
   Main,
   Error,
+  Timer,
   Header,
+  Footer,
   Loader,
   Progress,
   Question,
@@ -13,14 +15,17 @@ import {
 import { MOCK_JSON_API } from "./config";
 import "./index.css";
 
+const SEC_PER_QUES = 30;
+
 const initialState = {
+  // loading, error, ready, active, finished
+  status: "loading",
   questions: [],
   index: 0,
   points: 0,
   highscore: 0,
   answer: null,
-  // loading, error, ready, active, finished
-  status: "loading",
+  secRemaining: null,
 };
 
 function reducer(state, action) {
@@ -32,7 +37,11 @@ function reducer(state, action) {
       return { ...state, status: "error" };
 
     case "start":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        secRemaining: state.questions.length * SEC_PER_QUES,
+      };
 
     case "newAnswer":
       const question = state.questions.at(state.index);
@@ -57,14 +66,31 @@ function reducer(state, action) {
           state.points > state.highscore ? state.points : state.highscore,
       };
 
+    case "reset":
+      return {
+        ...initialState,
+        status: "ready",
+        highscore: state.highscore,
+        questions: state.questions,
+      };
+
+    case "tick":
+      return {
+        ...state,
+        secRemaining: state.secRemaining - 1,
+        status: !state.secRemaining ? "finished" : state.status,
+      };
+
     default:
       throw new Error("Unknown action received");
   }
 }
 
 export default function App() {
-  const [{ questions, status, index, answer, points, highscore }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    { questions, status, index, answer, points, highscore, secRemaining },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const numQues = questions.length;
   const maxPoints = questions.reduce(
@@ -111,11 +137,14 @@ export default function App() {
               answer={answer}
               dispatch={dispatch}
             />
-            <NextButton {...{ dispatch, answer, index, numQues }} />
+            <Footer>
+              <Timer {...{ dispatch, secRemaining }} />
+              <NextButton {...{ dispatch, answer, index, numQues }} />
+            </Footer>
           </>
         )}
         {status === "finished" && (
-          <FinalScreen {...{ points, maxPoints, highscore }} />
+          <FinalScreen {...{ points, maxPoints, highscore, dispatch }} />
         )}
       </Main>
     </div>
