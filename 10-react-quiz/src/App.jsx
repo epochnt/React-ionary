@@ -1,11 +1,13 @@
 import { useEffect, useReducer } from "react";
 import {
-  Header,
   Main,
-  Loader,
   Error,
-  StartScreen,
+  Header,
+  Loader,
+  Progress,
   Question,
+  NextButton,
+  StartScreen,
 } from "./components";
 import { MOCK_JSON_API } from "./config";
 import "./index.css";
@@ -13,6 +15,8 @@ import "./index.css";
 const initialState = {
   questions: [],
   index: 0,
+  points: 0,
+  answer: null,
   // loading, error, ready, active, finished
   status: "loading",
 };
@@ -28,13 +32,34 @@ function reducer(state, action) {
     case "start":
       return { ...state, status: "active" };
 
+    case "newAnswer":
+      const question = state.questions.at(state.index);
+
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          question.correctOption === action.payload
+            ? question.points + state.points
+            : state.points,
+      };
+
+    case "nextQuestion":
+      return { ...state, index: state.index + 1, answer: null };
+
     default:
       throw new Error("Unknown action received");
   }
 }
 
 export default function App() {
-  const [{ questions, status, index }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+
+  const numQues = questions.length;
+  const maxPoints = questions.reduce((acc, questions) => (acc += questions.points), 0);
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -67,7 +92,17 @@ export default function App() {
         {status === "ready" && (
           <StartScreen numQues={questions.length} {...{ dispatch }} />
         )}
-        {status === "active" && <Question {...questions[index]}/>}
+        {status === "active" && (
+          <>
+            <Progress {...{ index, numQues, points, maxPoints, answer }} />
+            <Question
+              {...questions[index]}
+              answer={answer}
+              dispatch={dispatch}
+            />
+            <NextButton {...{ dispatch, answer }} />
+          </>
+        )}
       </Main>
     </div>
   );
