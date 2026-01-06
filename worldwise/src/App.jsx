@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import { Homepage, Pricing, Product, PageNotFound } from "./pages";
+import { Homepage, Pricing, Product, PageNotFound, AppLayout } from "./pages";
 import "./index.css";
 
 export default function App() {
@@ -8,7 +8,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Homepage />} /> 
         <Route path="product" element={<Product />} />
-        <Route path="pricing" element={<Pricing />} />
+        <Route path="price" element={<Pricing />} />
+        <Route path="app" element={<AppLayout />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
