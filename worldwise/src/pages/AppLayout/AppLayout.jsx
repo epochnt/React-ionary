@@ -1,4 +1,4 @@
-import { AppNav } from "../components"
+import { AppNav } from "../../components"
 
 export default function AppLayout() {
   return (
