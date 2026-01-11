@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { Navigate, BrowserRouter, Routes, Route } from "react-router";
 import {
   Homepage,
   Pricing,
@@ -9,7 +9,7 @@ import {
   Login,
 } from "./pages";
 import { MOCK_JSON_API } from "./config";
-import { CityList, CountryList } from "./components";
+import { Form, City, CityList, CountryList } from "./components";
 import "./index.css";
 
 export default function App() {
@@ -44,16 +44,17 @@ export default function App() {
       <Routes>
         <Route index element={<Homepage />} />
         <Route path="app" element={<AppLayout />}>
-          <Route index element={<CityList {...{ cities, isLoading }} />} />
+          <Route index element={<Navigate to="cities" replace />} />
           <Route
             path="cities"
             element={<CityList {...{ cities, isLoading }} />}
           />
+          <Route path="cities/:id" element={<City />} />
           <Route
             path="countries"
             element={<CountryList {...{ cities, isLoading }} />}
           />
-          <Route path="form" element={<p>Form</p>} />
+          <Route path="form" element={<Form />} />
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="price" element={<Pricing />} />
