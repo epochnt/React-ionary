@@ -9,7 +9,7 @@ import {
   Login,
 } from "./pages";
 import { MOCK_JSON_API } from "./config";
-import { CityList } from "./components";
+import { CityList, CountryList } from "./components";
 import "./index.css";
 
 export default function App() {
@@ -49,7 +49,10 @@ export default function App() {
             path="cities"
             element={<CityList {...{ cities, isLoading }} />}
           />
-          <Route path="countries" element={<p>List of countries</p>} />
+          <Route
+            path="countries"
+            element={<CountryList {...{ cities, isLoading }} />}
+          />
           <Route path="form" element={<p>Form</p>} />
         </Route>
         <Route path="login" element={<Login />} />

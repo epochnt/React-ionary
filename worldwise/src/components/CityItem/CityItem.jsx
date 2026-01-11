@@ -8,7 +8,7 @@ const formatDate = (date) =>
     weekday: "long",
   }).format(new Date(date));
 
-export default function CityItem({ cityName, country, date, emoji }) {
+export default function CityItem({ cityName, date, emoji }) {
   return (
     <li className={styles.cityItem}>
       <span className={styles.emoji}>{emoji}</span>
