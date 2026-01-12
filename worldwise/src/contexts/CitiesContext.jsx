@@ -12,6 +12,7 @@ export function useCities() {
 export function CitiesProvider({ children }) {
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentCity, setCurrentCity] = useState({});
 
   useEffect(() => {
     async function getCities() {
@@ -35,11 +36,32 @@ export function CitiesProvider({ children }) {
     getCities();
   }, []);
 
+  const getCity = async (id) => {
+    try {
+      setIsLoading(true);
+
+      const res = await fetch(`${MOCK_JSON_API}/${id}`);
+      if (!res.ok)
+        throw new Error(
+          `Mock fetch fail, check if the json-server in runing. HTTP status${res.status}`
+        );
+      const data = await res.json();
+
+      setCurrentCity(data);
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <CitiesContext.Provider
       value={{
         cities,
         isLoading,
+        currentCity,
+        getCity,
       }}
     >
       {children}
