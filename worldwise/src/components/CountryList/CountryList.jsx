@@ -2,8 +2,11 @@ import CountryItem from "../CountryItem/CountryItem";
 import Message from "../Message/Message";
 import Spinner from "../Spinner/Spinner";
 import styles from "./CountryList.module.css";
+import { useCities } from "../../contexts";
 
-export default function CounteryList({ cities, isLoading }) {
+export default function CounteryList() {
+  const { cities, isLoading } = useCities();
+
   if (isLoading) return <Spinner />;
   if (!cities.length)
     return (
