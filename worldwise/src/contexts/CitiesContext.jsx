@@ -83,6 +83,28 @@ export function CitiesProvider({ children }) {
     }
   };
 
+  const deleteCity = async (id) => {
+    try {
+      setIsLoading(true);
+
+      const res = await fetch(`${MOCK_JSON_API}/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok)
+        throw new Error("Failed to delete id, check is server is running");
+
+      const data = await res.json();
+      if (!data || !Object.values(data).length)
+        throw new Error("Empty object deleted");
+
+      setCities((cities) => cities.filter((city) => city.id !== id));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <CitiesContext.Provider
       value={{
@@ -91,6 +113,7 @@ export function CitiesProvider({ children }) {
         currentCity,
         getCity,
         createCity,
+        deleteCity,
       }}
     >
       {children}
