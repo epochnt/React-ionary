@@ -4,3 +4,4 @@ export { default as Pricing } from "./Pricing/Pricing";
 export { default as Homepage } from "./Homepage/Homepage";
 export { default as AppLayout } from "./AppLayout/AppLayout";
 export { default as PageNotFound } from "./PageNotFound";
+export { default as ProtectedRoute } from "./ProtectedRoute";

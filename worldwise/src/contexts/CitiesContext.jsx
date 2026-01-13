@@ -60,7 +60,7 @@ function reducer(state, action) {
       };
 
     default:
-      throw Error("Unkown action type dispatced");
+      throw new Error("Unkown action type dispatced for cities");
   }
 }
 
