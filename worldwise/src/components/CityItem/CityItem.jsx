@@ -20,9 +20,9 @@ export default function CityItem({ id, cityName, date, emoji, position }) {
       <Link
         className={`${styles.cityItem} 
         ${currCityName === cityName ? styles["cityItem--active"] : ""}`}
-        to={`${id}?lat=${position.lat.toFixed(4)}&lng=${position.lng.toFixed(
+        to={`${id}?lat=${(+position.lat).toFixed(
           4
-        )}`}
+        )}&lng=${(+position.lng).toFixed(4)}`}
       >
         <span className={styles.emoji}>{emoji}</span>
         <h3 className={styles.name}>{cityName}</h3>

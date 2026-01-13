@@ -55,6 +55,34 @@ export function CitiesProvider({ children }) {
     }
   };
 
+  const createCity = async (city) => {
+    try {
+      setIsLoading(true);
+
+      const res = await fetch(MOCK_JSON_API, {
+        method: "POST",
+        body: JSON.stringify(city),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok)
+        throw new Error(
+          "Adding new city post call failed, check is server is running"
+        );
+
+      const data = await res.json();
+      if (!data || !Object.keys(data).length)
+        throw new Error("Empty obj recieved from write opertaion");
+
+      setCities((cities) => [...cities, data]);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <CitiesContext.Provider
       value={{
@@ -62,6 +90,7 @@ export function CitiesProvider({ children }) {
         isLoading,
         currentCity,
         getCity,
+        createCity,
       }}
     >
       {children}
