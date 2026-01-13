@@ -9,13 +9,20 @@ import {
   useMapEvent,
 } from "react-leaflet";
 import { useCities } from "../../contexts";
+import { useGeolocation } from "../../hooks";
+import Button from "../Button/Button";
 import styles from "./Map.module.css";
 
 export default function Map() {
   const { cities } = useCities();
   const [mapPosition, setMapPosition] = useState([40, -0]);
-
+  const {
+    position: geoPosition,
+    isLoading: geolocationLoading,
+    getPosition,
+  } = useGeolocation();
   const [searchParams] = useSearchParams();
+
   const mapLat = searchParams.get("lat");
   const mapLng = searchParams.get("lng");
 
@@ -23,8 +30,18 @@ export default function Map() {
     if (mapLat && mapLng) setMapPosition([mapLat, mapLng]);
   }, [mapLat, mapLng]);
 
+  useEffect(() => {
+    if (geoPosition) setMapPosition([geoPosition.lat, geoPosition.lng]);
+  }, [geoPosition]);
+
   return (
     <div className={styles.mapContainer}>
+      {!geoPosition && (
+        <Button type="position" onClick={getPosition}>
+          {geolocationLoading ? "Loading..." : "Use your location"}
+        </Button>
+      )}
+
       <MapContainer className={styles.map} center={mapPosition} zoom={8}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
