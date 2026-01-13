@@ -1,7 +1,68 @@
-import { useState, useEffect, useContext, createContext } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  useReducer,
+} from "react";
 import { MOCK_JSON_API } from "../config";
 
 const CitiesContext = createContext();
+const initalState = {
+  cities: [],
+  isLoading: false,
+  currentCity: {},
+  error: "",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "loading":
+      return {
+        ...state,
+        isLoading: true,
+      };
+
+    case "cities/loaded":
+      return {
+        ...state,
+        isLoading: false,
+        cities: action.payload,
+      };
+
+    case "city/loaded":
+      return {
+        ...state,
+        isLoading: false,
+        currentCity: action.payload,
+      };
+
+    case "city/created":
+      return {
+        ...state,
+        isLoading: false,
+        cities: [...state.cities, action.payload],
+        currentCity: action.payload,
+      };
+
+    case "city/deleted":
+      return {
+        ...state,
+        isLoading: false,
+        cities: state.cities.filter((city) => city.id !== action.payload),
+      };
+
+    case "rejected":
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload,
+      };
+
+    default:
+      throw Error("Unkown action type dispatced");
+  }
+}
 
 export function useCities() {
   if (!CitiesContext)
@@ -10,14 +71,15 @@ export function useCities() {
 }
 
 export function CitiesProvider({ children }) {
-  const [cities, setCities] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentCity, setCurrentCity] = useState({});
+  const [{ cities, isLoading, currentCity }, dispatch] = useReducer(
+    reducer,
+    initalState
+  );
 
   useEffect(() => {
     async function getCities() {
       try {
-        setIsLoading(true);
+        dispatch({ type: "loading" });
 
         const res = await fetch(MOCK_JSON_API);
         if (!res.ok)
@@ -25,20 +87,19 @@ export function CitiesProvider({ children }) {
             `Mock fetch fail, check if the json-server in runing. HTTP status${res.status}`
           );
         const data = await res.json();
-
-        setCities(data);
+        dispatch({ type: "cities/loaded", payload: data });
       } catch (error) {
+        dispatch({ type: "rejected", payload: error.message });
         console.log(error.message);
-      } finally {
-        setIsLoading(false);
       }
     }
     getCities();
   }, []);
 
   const getCity = async (id) => {
+    if (+id === currentCity.id) return currentCity;
     try {
-      setIsLoading(true);
+      dispatch({ type: "loading" });
 
       const res = await fetch(`${MOCK_JSON_API}/${id}`);
       if (!res.ok)
@@ -47,17 +108,16 @@ export function CitiesProvider({ children }) {
         );
       const data = await res.json();
 
-      setCurrentCity(data);
+      dispatch({ type: "city/loaded", payload: data });
     } catch (error) {
+      dispatch({ type: "rejected", payload: error.message });
       console.log(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const createCity = async (city) => {
     try {
-      setIsLoading(true);
+      dispatch({ type: "loading" });
 
       const res = await fetch(MOCK_JSON_API, {
         method: "POST",
@@ -75,17 +135,16 @@ export function CitiesProvider({ children }) {
       if (!data || !Object.keys(data).length)
         throw new Error("Empty obj recieved from write opertaion");
 
-      setCities((cities) => [...cities, data]);
+      dispatch({ type: "city/created", payload: data });
     } catch (error) {
+      dispatch({ type: "rejected", payload: error.message });
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const deleteCity = async (id) => {
     try {
-      setIsLoading(true);
+      dispatch({ type: "loading" });
 
       const res = await fetch(`${MOCK_JSON_API}/${id}`, {
         method: "DELETE",
@@ -97,11 +156,10 @@ export function CitiesProvider({ children }) {
       if (!data || !Object.values(data).length)
         throw new Error("Empty object deleted");
 
-      setCities((cities) => cities.filter((city) => city.id !== id));
+      dispatch({ type: "city/deleted", payload: id });
     } catch (error) {
+      dispatch({ type: "rejected", payload: error.message });
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 

@@ -17,8 +17,8 @@ export default function CounteryList() {
 
   const countries = Object.values(
     cities.reduce((countrylist, city) => {
-      if (!countrylist[city?.cityName]) {
-        countrylist[city.cityName] = {
+      if (!countrylist[city?.country]) {
+        countrylist[city.country] = {
           country: city.country,
           emoji: city.emoji,
         };
