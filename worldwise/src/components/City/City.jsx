@@ -19,7 +19,7 @@ export default function City() {
 
   useEffect(() => {
     getCity(cityId);
-  }, [cityId]);
+  }, [cityId, getCity]);
   // cannot pass getCity to dependency array here
 
   if (isLoading) return <Spinner />;

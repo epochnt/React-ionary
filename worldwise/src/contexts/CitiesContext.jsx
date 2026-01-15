@@ -1,7 +1,7 @@
 import {
-  useState,
   useEffect,
   useContext,
+  useCallback,
   createContext,
   useReducer,
 } from "react";
@@ -96,7 +96,7 @@ export function CitiesProvider({ children }) {
     getCities();
   }, []);
 
-  const getCity = async (id) => {
+  const getCity = useCallback( async (id) => {
     if (+id === currentCity.id) return currentCity;
     try {
       dispatch({ type: "loading" });
@@ -113,7 +113,7 @@ export function CitiesProvider({ children }) {
       dispatch({ type: "rejected", payload: error.message });
       console.log(error.message);
     }
-  };
+  }, [currentCity.id]);
 
   const createCity = async (city) => {
     try {
