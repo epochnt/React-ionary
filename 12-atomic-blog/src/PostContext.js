@@ -1,4 +1,10 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import { faker } from "@faker-js/faker";
 
 function createRandomPost() {
@@ -11,8 +17,8 @@ function createRandomPost() {
 const PostContext = createContext();
 
 export function usePost() {
-  if(!PostContext) throw new Error("Calling usePost out of PostContext Tree")
-  return useContext(PostContext)
+  if (!PostContext) throw new Error("Calling usePost out of PostContext Tree");
+  return useContext(PostContext);
 }
 
 export function PostProvider({ children }) {
@@ -31,25 +37,23 @@ export function PostProvider({ children }) {
         )
       : posts;
 
-  function handleAddPost(post) {
+  const handleAddPost = useCallback((post) => {
     setPosts((posts) => [post, ...posts]);
-  }
+  }, []);
 
   function handleClearPosts() {
     setPosts([]);
   }
 
-  return (
-    <PostContext.Provider
-      value={{
-        posts: searchedPosts,
-        onAddPost: handleAddPost,
-        onClearPosts: handleClearPosts,
-        searchQuery,
-        setSearchQuery,
-      }}
-    >
-      {children}
-    </PostContext.Provider>
-  );
+  const value = useMemo(() => {
+    return {
+      posts: searchedPosts,
+      onAddPost: handleAddPost,
+      onClearPosts: handleClearPosts,
+      searchQuery,
+      setSearchQuery,
+    };
+  }, [searchedPosts, searchQuery, handleAddPost]);
+
+  return <PostContext.Provider value={value}>{children}</PostContext.Provider>;
 }
