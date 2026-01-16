@@ -3,10 +3,9 @@ import {
   BalanceDisplay,
   CreateCustomer,
   Customer,
-} from "./components";
-import "./store/store"
+} from "./features";
+import store from "./store/store";
 import "./index.css";
-
 function App() {
   return (
     <div>
