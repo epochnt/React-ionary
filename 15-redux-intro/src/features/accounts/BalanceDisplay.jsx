@@ -1,3 +1,5 @@
+import { connect } from "react-redux";
+
 function formatCurrency(value) {
   return new Intl.NumberFormat("en", {
     style: "currency",
@@ -5,8 +7,19 @@ function formatCurrency(value) {
   }).format(value);
 }
 
-function BalanceDisplay() {
-  return <div className="balance">{formatCurrency(123456)}</div>;
+function BalanceDisplay({ balance }) {
+  return <div className="balance">{formatCurrency(balance)}</div>;
 }
 
-export default BalanceDisplay;
+// Old redux before hooks incease you see it in the wild
+function mapStateToProps(store) {
+  return {
+    balance: store.account.balance,
+  };
+}
+
+//connect returnse a function that then takes the component as arg
+// and return the whole component. The passes component then gets
+// access to the mapped state variable passed to connect
+
+export default connect(mapStateToProps)(BalanceDisplay);
