@@ -26,12 +26,12 @@ export default function accountReducer(state = initialAccountState, action) {
       };
 
     case "account/requestLoan":
-      if (state.loan || action.payload.loan < 0) return state;
+      if (state.loan || action.payload.loanAmount < 0) return state;
       return {
         ...state,
-        loan: action.payload.loan,
+        loan: action.payload.loanAmount,
         loanPurpose: action.payload.loanPurpose,
-        balance: state.balance + action.payload.loan,
+        balance: state.balance + action.payload.loanAmount,
       };
 
     case "account/payLoan":
@@ -49,14 +49,14 @@ export default function accountReducer(state = initialAccountState, action) {
 
 /* ---------- Actions ---------- */
 export function deposit(amount) {
-  return { type: "account/deposit", payload : amount}
+  return { type: "account/deposit", payload: amount };
 }
 export function withdraw(amount) {
-  return { type: "account/withdraw", payload: amount}
+  return { type: "account/withdraw", payload: amount };
 }
-export function requestLoan(payload) {
-  return { type: "account/requestLoan", payload}
+export function requestLoan(loanAmount, loanPurpose) {
+  return { type: "account/requestLoan", payload: { loanAmount, loanPurpose } };
 }
 export function payLoan() {
-  return { type: "account/payLoan"}
+  return { type: "account/payLoan" };
 }

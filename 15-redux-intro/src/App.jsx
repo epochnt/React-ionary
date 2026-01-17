@@ -1,4 +1,4 @@
-import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   AccountOperations,
   BalanceDisplay,
@@ -6,19 +6,22 @@ import {
   Customer,
 } from "./features";
 
-import store from "./store/store";
-import "./index.css";
 function App() {
+  const customer = useSelector((state) => state.customer.fullName);
+
   return (
-    <Provider store={store}>
-      <div>
-        <h1>🏦 The React-Redux Bank ⚛️</h1>
+    <div>
+      <h1>🏦 The React-Redux Bank ⚛️</h1>
+      {customer ? (
+        <>
+          <Customer />
+          <AccountOperations />
+          <BalanceDisplay />
+        </>
+      ) : (
         <CreateCustomer />
-        <Customer />
-        <AccountOperations />
-        <BalanceDisplay />
-      </div>
-    </Provider>
+      )}
+    </div>
   );
 }
 
