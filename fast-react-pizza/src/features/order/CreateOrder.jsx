@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Form, redirect, useNavigation, useActionData } from "react-router";
+import { createOrder } from "../../services";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -31,14 +32,18 @@ const fakeCart = [
 ];
 
 function CreateOrder() {
+  const navigation = useNavigation();
+  const errors = useActionData();
   // const [withPriority, setWithPriority] = useState(false);
+  const isSubmitting = navigation.state === "submitting";
   const cart = fakeCart;
 
   return (
     <div>
       <h2>Ready to order? Let's go!</h2>
 
-      <form>
+      {/* <Form method="POST" action="/order/new"> */}
+      <Form method="POST" action="/order/new">
         <div>
           <label>First Name</label>
           <input type="text" name="customer" required />
@@ -48,6 +53,7 @@ function CreateOrder() {
           <label>Phone number</label>
           <div>
             <input type="tel" name="phone" required />
+            {errors?.phone && <span>{errors?.phone}</span>}
           </div>
         </div>
 
@@ -70,11 +76,36 @@ function CreateOrder() {
         </div>
 
         <div>
-          <button>Order now</button>
+          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+          <button disabled={isSubmitting}>
+            {isSubmitting ? "Placing order" : "Order now"}
+          </button>
         </div>
-      </form>
+      </Form>
     </div>
   );
+}
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  const errors = {};
+
+  const order = {
+    ...data,
+    priority: data.priority === "on",
+    cart: JSON.parse(data.cart),
+  };
+
+  if (!isValidPhone(order.phone)) {
+    errors.phone =
+      "Invalid phone number! Correct phone number needed to contact you.";
+  }
+
+  if (Object.keys(errors).length) return errors;
+  //post call to mutate server state
+  const newOrder = await createOrder(order);
+  return redirect(`/order/${newOrder.id}`);
 }
 
 export default CreateOrder;

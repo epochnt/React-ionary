@@ -6,6 +6,7 @@ import {
   Order,
   orderLoader,
   CreateOrder,
+  orderAction,
 } from "./features";
 import { AppLayout, Home, Error } from "./ui";
 
@@ -30,7 +31,7 @@ const rotuer = createBrowserRouter([
         errorElement: <Error />,
         children: [
           { index: true, element: <Navigate to="/new" /> },
-          { path: "new", element: <CreateOrder /> },
+          { path: "new", action: orderAction, element: <CreateOrder /> },
           { path: ":orderId", loader: orderLoader, element: <Order /> },
         ],
       },
