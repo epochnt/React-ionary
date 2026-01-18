@@ -9,10 +9,12 @@ export default function AppLayout() {
   const isLoading = state === 'loading'
 
   return (
-    <div className="layour">
+    <div className="grid h-dvh grid-rows-[auto_1fr_auto]">
       {isLoading && <Loader />}
       <Header />
-      <main>
+      <main
+        className="mx-auto w-full max-w-3xl overflow-scroll px-5 md:max-w-6xl"
+      >
         {' '}
         <Outlet />
       </main>

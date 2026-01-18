@@ -13,7 +13,9 @@
   gap: 32px;
   height: 100dvh;
 } */
-
+input {
+  background-color: white;
+}
 /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
 .loader {
   width: 45px;

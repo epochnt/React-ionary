@@ -3,8 +3,11 @@ import { SearchOrder, User } from '../features'
 
 export default function Header() {
   return (
-    <header className="border-b border-stone-200 bg-yellow-500 px-4 py-3 uppercase sm:px-6">
-      <Link className="tracking-widest" to="/">
+    <header
+      className="flex items-center justify-between border-b border-stone-200
+        bg-yellow-400 px-4 py-3 uppercase sm:px-6"
+    >
+      <Link className="tracking-widest text-stone-800" to="/">
         Fast React Pizza Co.
       </Link>
       <SearchOrder />
