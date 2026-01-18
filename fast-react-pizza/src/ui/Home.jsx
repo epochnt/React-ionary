@@ -7,7 +7,7 @@ function Home() {
         <br />
         Straight out of the oven, straight to you.
       </h1>
-      <Link to="/menu"> menu</Link>
+      <Link to="/menu">menu</Link>
     </div>
   );
 }
