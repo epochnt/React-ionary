@@ -1,13 +1,17 @@
-import { Link } from 'react-router'
+import { CreateUser } from '../features'
+
 function Home() {
   return (
-    <div>
-      <h1 className="text-center text-xl font-bold text-yellow-500">
+    <div className="my-10 text-center sm:my-16">
+      <h1 className="mb-8 text-xl font-semibold">
         The best pizza.
         <br />
-        Straight out of the oven, straight to you.
+        <span className="text-yellow-500">
+          Straight out of the oven, straight to you.
+        </span>
       </h1>
-      <Link to="/menu">menu</Link>
+
+      <CreateUser />
     </div>
   )
 }

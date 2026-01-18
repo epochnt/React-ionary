@@ -19,6 +19,7 @@ export default function SearchOrder() {
         placeholder="Search order #"
         value={query}
         onChange={e => setQuery(e.target.value)}
+        className="bg-white"
       />
     </form>
   )
