@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router";
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router'
 import {
   Menu,
   menuLoader,
@@ -7,8 +7,8 @@ import {
   orderLoader,
   CreateOrder,
   orderAction,
-} from "./features";
-import { AppLayout, Home, Error } from "./ui";
+} from './features'
+import { AppLayout, Home, Error } from './ui'
 
 // Update element to component and navigate properly using the data syntax
 const rotuer = createBrowserRouter([
@@ -17,28 +17,28 @@ const rotuer = createBrowserRouter([
     element: <AppLayout />,
     errorElement: <Error />,
     children: [
-      { path: "/", element: <Home /> },
+      { path: '/', element: <Home /> },
       {
-        path: "/menu",
+        path: '/menu',
         loader: menuLoader,
         errorElement: <Error />,
         element: <Menu />,
       },
-      { path: "/cart", element: <Cart /> },
+      { path: '/cart', element: <Cart /> },
       {
         // prefix route order
-        path: "/order",
+        path: '/order',
         errorElement: <Error />,
         children: [
           { index: true, element: <Navigate to="/new" /> },
-          { path: "new", action: orderAction, element: <CreateOrder /> },
-          { path: ":orderId", loader: orderLoader, element: <Order /> },
+          { path: 'new', action: orderAction, element: <CreateOrder /> },
+          { path: ':orderId', loader: orderLoader, element: <Order /> },
         ],
       },
     ],
   },
-]);
+])
 
 export default function App() {
-  return <RouterProvider router={rotuer} />;
+  return <RouterProvider router={rotuer} />
 }

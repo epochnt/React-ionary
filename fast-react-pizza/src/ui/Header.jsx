@@ -1,5 +1,5 @@
-import { Link } from "react-router";
-import { SearchOrder } from "../features";
+import { Link } from 'react-router'
+import { SearchOrder } from '../features'
 
 export default function Header() {
   return (
@@ -7,5 +7,5 @@ export default function Header() {
       <Link to="/">Fast React Pizza Co.</Link>
       <SearchOrder />
     </header>
-  );
+  )
 }
