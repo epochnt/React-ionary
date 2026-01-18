@@ -1,14 +1,15 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router";
-import { Menu, Cart, Order, CreateOrder } from "./features";
+import { Menu, menuLoader, Cart, Order, CreateOrder } from "./features";
 import Home from "./ui/Home";
 import AppLayout from "./ui/AppLayout";
 
 // Update element to component and navigate properly using the data syntax
 const rotuer = createBrowserRouter([
-  { element: <AppLayout />,
+  {
+    element: <AppLayout />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/menu", element: <Menu /> },
+      { path: "/menu", loader: menuLoader, element: <Menu /> },
       { path: "/cart", element: <Cart /> },
       {
         path: "/order",
@@ -18,8 +19,8 @@ const rotuer = createBrowserRouter([
           { path: ":orderId", element: <Order /> },
         ],
       },
-    ]
-  }
+    ],
+  },
 ]);
 
 export default function App() {

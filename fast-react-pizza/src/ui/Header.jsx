@@ -6,5 +6,5 @@ export default function Header() {
       <Link to="/">Fast React Pizza Co.</Link>
       <p>Nitin</p>
     </header>
-  )
+  );
 }

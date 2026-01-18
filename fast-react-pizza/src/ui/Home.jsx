@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 function Home() {
   return (
     <div>
@@ -6,6 +7,7 @@ function Home() {
         <br />
         Straight out of the oven, straight to you.
       </h1>
+      <Link to="/menu"> menu</Link>
     </div>
   );
 }
