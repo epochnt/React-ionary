@@ -1,5 +1,5 @@
 import { useNavigate, useRouteError } from 'react-router'
-
+import { CustomLink } from '../ui'
 function NotFound() {
   const error = useRouteError()
   const navigate = useNavigate()
@@ -9,7 +9,7 @@ function NotFound() {
     <div>
       <h1>Something went wrong 😢</h1>
       <p>{error.data || error.message}</p>
-      <button onClick={() => navigate(-1)}>&larr; Go back</button>
+      <CustomLink onClick={() => navigate(-1)}>&larr; Go back</CustomLink>
     </div>
   )
 }

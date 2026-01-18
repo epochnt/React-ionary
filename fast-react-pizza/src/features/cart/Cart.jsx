@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import { CustomLink, Button } from '../../ui'
 
 const fakeCart = [
   {
@@ -29,17 +29,17 @@ function Cart() {
 
   return (
     <div>
-      <Link
+      <CustomLink
         className="text-blue-500 hover:text-blue-600 hover:underline"
         to="/menu"
       >
         &larr; Back to menu
-      </Link>
+      </CustomLink>
 
       <h2>Your cart, %NAME%</h2>
 
       <div>
-        <Link to="/order/new">Order pizzas</Link>
+        <Button to="/order/new">Order pizzas</Button>
         <button>Clear cart</button>
       </div>
     </div>

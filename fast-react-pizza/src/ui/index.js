@@ -1,5 +1,6 @@
 export { default as AppLayout } from './AppLayout'
 export { default as Button } from './Button'
+export { default as CustomLink } from './CustomLink'
 export { default as Error } from './Error'
 export { default as Header } from './Header'
 export { default as Home } from './Home'
