@@ -1,6 +1,9 @@
 export { default as Cart } from './cart/Cart'
 export { default as CartOverview } from './cart/CartOverview'
 
+export { default as cartReducer } from './cart/cartSlice'
+export * from './cart/cartSlice'
+
 export { default as Menu, loader as menuLoader } from './menu/Menu'
 
 export { default as Order, loader as orderLoader } from './order/Order'
