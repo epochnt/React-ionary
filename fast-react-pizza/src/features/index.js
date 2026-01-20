@@ -10,3 +10,4 @@ export { default as SearchOrder } from './order/SearchOrder'
 
 export { default as User } from './user/User'
 export { default as CreateUser } from './user/CreateUser'
+export { default as userReducer, updateName } from './user/userSlice'

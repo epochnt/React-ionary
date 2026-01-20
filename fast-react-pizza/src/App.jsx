@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router'
+import { Provider } from 'react-redux'
 import {
   Menu,
   menuLoader,
@@ -9,6 +10,7 @@ import {
   orderAction,
 } from './features'
 import { AppLayout, Home, Error } from './ui'
+import store from './store/store'
 
 // Update element to component and navigate properly using the data syntax
 const rotuer = createBrowserRouter([
@@ -40,5 +42,9 @@ const rotuer = createBrowserRouter([
 ])
 
 export default function App() {
-  return <RouterProvider router={rotuer} />
+  return (
+    <Provider store={store}>
+      <RouterProvider router={rotuer} />
+    </Provider>
+  )
 }
