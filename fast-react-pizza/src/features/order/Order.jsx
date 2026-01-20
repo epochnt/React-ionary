@@ -1,6 +1,5 @@
 // Test ID: IIDSAT
 import { useLoaderData } from 'react-router'
-import { getOrder } from '../../services'
 import {
   calcMinutesLeft,
   formatCurrency,
@@ -8,7 +7,7 @@ import {
 } from '../../utils/helpers'
 import OrderItem from './OrderItem'
 
-function Order() {
+export default function Order() {
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const order = useLoaderData()
   const {
@@ -63,7 +62,7 @@ function Order() {
         className="divide-y divide-stone-300 border-t border-b border-stone-300"
       >
         {cart.map(item => (
-          <OrderItem item={item} key={item.id} />
+          <OrderItem item={item} key={item.pizzaId} />
         ))}
       </ul>
 
@@ -83,10 +82,3 @@ function Order() {
     </div>
   )
 }
-
-export async function loader({ params: { orderId } }) {
-  const order = await getOrder(orderId)
-  return order
-}
-
-export default Order

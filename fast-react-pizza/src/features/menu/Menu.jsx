@@ -1,5 +1,4 @@
 import { useLoaderData } from 'react-router'
-import { getMenu } from '../../services'
 import MenuItem from './MenuItem'
 
 function Menu() {
@@ -11,12 +10,6 @@ function Menu() {
       ))}
     </ul>
   )
-}
-
-// move it out later to make fast referesh work
-export async function loader() {
-  const menu = await getMenu()
-  return menu
 }
 
 export default Menu
