@@ -5,7 +5,7 @@ function EmptyCart() {
     <div className="py-4">
       <CustomLink to="/menu">&larr; Back to menu</CustomLink>
 
-      <p className="font-semibold mt-7">
+      <p className="mt-7 font-semibold">
         Your cart is still empty. Start adding some pizzas :)
       </p>
     </div>

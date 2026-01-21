@@ -1,39 +1,22 @@
-import { Form, useNavigation, useActionData } from 'react-router'
-import { Button } from './../../ui'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
-
-const fakeCart = [
-  {
-    pizzaId: 12,
-    name: 'Mediterranean',
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: 'Vegetale',
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: 'Spinach and Mushroom',
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-]
+import { Form, useNavigation, useActionData } from 'react-router'
+import { getTransformedCart } from '../cart/utils'
+import { Button } from './../../ui'
+import EmptyCart from '../cart/EmptyCart'
 
 function CreateOrder() {
   const navigation = useNavigation()
   const errors = useActionData()
   const userName = useSelector(state => state.user.userName)
-  // const [withPriority, setWithPriority] = useState(false);
-  const isSubmitting = navigation.state === 'submitting'
-  const cart = fakeCart
+  const cart = useSelector(getTransformedCart)
+  const [withPriority, setWithPriority] = useState(false)
 
+  const isSubmitting = navigation.state === 'submitting'
+  const cartPrice = cart.reduce((sum, pizza) => sum + pizza.totalPrice, 0)
+  const totalPrice = withPriority ? cartPrice * 1.2 : cartPrice
+
+  if (!cart.length) return <EmptyCart />
   return (
     <div className="py-6">
       <h2 className="mb-8 text-xl font-semibold">Ready to order? Let's go!</h2>
@@ -89,8 +72,8 @@ function CreateOrder() {
             type="checkbox"
             name="priority"
             id="priority"
-            // value={withPriority}
-            // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={e => setWithPriority(e.target.checked)}
           />
           <label className="font-medium" htmlFor="priority">
             Want to yo give your order priority?
@@ -100,7 +83,7 @@ function CreateOrder() {
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <Button disabled={isSubmitting}>
-            {isSubmitting ? 'Placing order' : 'Order now'}
+            {isSubmitting ? 'Placing order...' : `Order now $${totalPrice}`}
           </Button>
         </div>
       </Form>

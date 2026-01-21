@@ -4,6 +4,7 @@ import { formatCurrency } from '../../utils/helpers'
 import { Button } from '../../ui'
 import { getQty } from '../cart/utils'
 import DeleteItem from '../cart/DeleteItem'
+import UpdateItemQty from '../cart/UpdateItemQty'
 
 function MenuItem({ pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza
@@ -38,7 +39,12 @@ function MenuItem({ pizza }) {
           {!soldOut ? (
             <>
               <p>{formatCurrency(unitPrice)}</p>
-              {qty && <DeleteItem pizzaId={id} />}
+              {qty && (
+                <div className="flex gap-3">
+                  <UpdateItemQty pizzaId={id} />
+                  <DeleteItem pizzaId={id} />
+                </div>
+              )}
               {!qty && (
                 <Button size="small" onClick={handleAddToCart}>
                   Add to cart

@@ -11,6 +11,7 @@ export default function Button({
   const styles = {
     primary: ' px-4 py-3 md:px-6 md:py-3',
     small: ' px-4 py-2 md:px-5 md:py-2.5 text-xs',
+    rounded: 'px-2.5 py-1 md:px-3 md:py-1.5 text-sm',
   }
   return (
     <Tag
