@@ -1,18 +1,29 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Form, useNavigation, useActionData } from 'react-router'
+
 import { getTransformedCart } from '../cart/utils'
+import { fetchAddress } from '../user/userSlice'
 import { Button } from './../../ui'
 import EmptyCart from '../cart/EmptyCart'
 
 function CreateOrder() {
   const navigation = useNavigation()
   const errors = useActionData()
-  const userName = useSelector(state => state.user.userName)
-  const cart = useSelector(getTransformedCart)
+  const dispatch = useDispatch()
+
   const [withPriority, setWithPriority] = useState(false)
+  const {
+    userName,
+    status: addressStatus,
+    position,
+    address,
+    error: errorAddress,
+  } = useSelector(state => state.user)
+  const cart = useSelector(getTransformedCart)
 
   const isSubmitting = navigation.state === 'submitting'
+  const isLoadingAdress = addressStatus === 'loading'
   const cartPrice = cart.reduce((sum, pizza) => sum + pizza.totalPrice, 0)
   const totalPrice = withPriority ? cartPrice * 1.2 : cartPrice
 
@@ -55,13 +66,36 @@ function CreateOrder() {
 
         <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
-          <div className="grow">
+          <div className="grow relative">
             <input
               className="input w-full"
               type="text"
               name="address"
+              disabled={isLoadingAdress}
+              defaultValue={typeof address === 'string' ? address : ''}
               required
             />
+            {errorAddress && (
+              <span
+                className="ms-1 rounded-md bg-red-100 p-1 text-xs text-red-700"
+              >
+                {errorAddress}
+              </span>
+            )}
+            {!position.latitude && !position.longitude && (
+              <span className="absolute right-0 top-px">
+                <Button
+                  size="small"
+                  disabled={isLoadingAdress}
+                  onClick={e => {
+                    e.preventDefault()
+                    dispatch(fetchAddress())
+                  }}
+                >
+                  Get Address
+                </Button>
+              </span>
+            )}
           </div>
         </div>
 
