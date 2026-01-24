@@ -10,10 +10,11 @@ import {
   Settings,
   Users,
 } from './pages'
+import AppLayout from './ui/AppLayout'
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    element: <AppLayout />,
     errorElement: <PageNotFound />,
     children: [
       { path: '/', element: <Navigate to="/dashboard" replace /> },
