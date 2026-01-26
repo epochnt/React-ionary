@@ -38,8 +38,6 @@ export default function CabinTable() {
     queryFn: getCabins,
   })
 
-  console.log(cabins, isPending, isError, error)
-
   if (isPending) return <Spinner />
 
   return (

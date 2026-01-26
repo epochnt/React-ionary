@@ -39,8 +39,6 @@ const queryClient = new QueryClient({
   },
 })
 
-console.log(queryClient)
-
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
