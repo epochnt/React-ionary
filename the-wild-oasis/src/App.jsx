@@ -1,6 +1,7 @@
 import { RouterProvider, Navigate, createBrowserRouter } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from 'react-hot-toast'
 import GlobalStyles from './styles/GlobalStyles'
 import {
   Account,
@@ -39,12 +40,30 @@ const queryClient = new QueryClient({
   },
 })
 
+const toastOptions = {
+  success: { duration: 3000 },
+  error: { duration: 5000 },
+  style: {
+    fontSize: '1.6rem',
+    maxWidth: '50rem',
+    padding: '1.6rem 2.5rem',
+    backgroundColor: 'var(--color-grey-0)',
+    color: 'var(--color-grey-770)',
+  },
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
       <RouterProvider router={router} />
+      <Toaster
+        position="top-center"
+        gutter={12}
+        containerStyle={{ margin: '0.8rem' }}
+        toastOptions={toastOptions}
+      />
     </QueryClientProvider>
   )
 }
