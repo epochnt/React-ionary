@@ -17,3 +17,14 @@ export async function deleteCabin(id) {
     throw new Error('Error deleting cabin from supabase')
   }
 }
+
+export async function insertCabin(cabin) {
+  const { data, error } = await supabase.from('cabins').insert([cabin]).select()
+
+  if (error) {
+    console.log(error)
+    throw new Error('Error deleting cabin from supabase')
+  }
+
+  return data
+}
