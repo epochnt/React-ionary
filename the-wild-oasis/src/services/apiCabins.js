@@ -23,7 +23,7 @@ export async function insertCabin(cabin) {
 
   if (error) {
     console.log(error)
-    throw new Error('Error deleting cabin from supabase')
+    throw new Error('Error inserting cabin to supabase')
   }
 
   return data
