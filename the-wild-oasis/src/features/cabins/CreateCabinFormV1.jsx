@@ -10,12 +10,9 @@ import FileInput from '../../ui/FileInput'
 import FormRow from '../../ui/FormRow'
 import Textarea from '../../ui/Textarea'
 
-function CreateCabinForm({ cabin = {} }) {
+function CreateCabinForm() {
+  const { register, handleSubmit, reset, formState, getValues } = useForm()
   const queryClient = useQueryClient()
-  const { id: editId, ...editValues } = cabin
-  const { register, handleSubmit, reset, formState, getValues } = useForm({
-    defaultValues: editId ? editValues : {},
-  })
   const { errors } = formState
 
   const { isPending: isCreating, mutate } = useMutation({
@@ -108,9 +105,7 @@ function CreateCabinForm({ cabin = {} }) {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>
-          {editId ? 'Edit cabin' : 'Add cabin'}
-        </Button>
+        <Button disabled={isCreating}>Add cabin</Button>
       </FormRow>
     </Form>
   )

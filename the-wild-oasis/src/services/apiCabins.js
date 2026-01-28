@@ -33,6 +33,7 @@ export async function insertCabin(cabin) {
     .from('cabins')
     .insert([{ ...cabin, image: imagePath }])
     .select()
+    .single()
 
   if (error) {
     console.log(error)
@@ -47,7 +48,7 @@ export async function insertCabin(cabin) {
 
   if (fileUploadError) {
     console.log(fileUploadError)
-    await deleteCabin(data.at(0).id)
+    await deleteCabin(data.id)
   }
   return data
 }

@@ -1,10 +1,13 @@
 import styled from 'styled-components'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { formatCurrency } from '../../utils/helpers'
 import { deleteCabin } from '../../services/apiCabins'
+import Row from '../../ui/Row'
 import Spinner from '../../ui/Spinner'
+import CreateCabinForm from './CreateCabinForm'
 
 const TableRow = styled.div`
   display: grid;
@@ -44,10 +47,20 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `
+
 export default function CabinRow({
-  cabin: { id, name, maxCapacity, regularPrice, discount, image } = {},
+  cabin: {
+    id,
+    name,
+    maxCapacity,
+    regularPrice,
+    discount,
+    image,
+    description,
+  } = {},
 }) {
   const queryClient = useQueryClient()
+  const [showEditForm, setShowEditForm] = useState(false)
 
   const { isPending: isDeleting, mutate: mutateDeleteCabin } = useMutation({
     mutationFn: (id) => deleteCabin(id),
@@ -63,13 +76,25 @@ export default function CabinRow({
   if (isDeleting) return <Spinner />
 
   return (
-    <TableRow role="row">
-      <Img src={image} />
-      <Cabin>{name}</Cabin>
-      <div>Fits up to {maxCapacity} guests</div>
-      <Price>{formatCurrency(regularPrice)}</Price>
-      <Discount>{formatCurrency(discount)}</Discount>
-      <button onClick={() => mutateDeleteCabin(id)}>Delete</button>
-    </TableRow>
+    <>
+      <TableRow role="row">
+        <Img src={image} />
+        <Cabin>{name}</Cabin>
+        <div>Fits up to {maxCapacity} guests</div>
+        <Price>{formatCurrency(regularPrice)}</Price>
+        <Discount>{formatCurrency(discount)}</Discount>
+        <Row>
+          <button onClick={() => mutateDeleteCabin(id)}>Delete</button>
+          <button onClick={() => setShowEditForm((show) => !show)}>Edit</button>
+        </Row>
+      </TableRow>
+      {showEditForm && (
+        <CreateCabinForm
+          cabin={{
+            ...{ id, name, maxCapacity, regularPrice, discount, description },
+          }}
+        />
+      )}
+    </>
   )
 }
