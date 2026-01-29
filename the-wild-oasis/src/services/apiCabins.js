@@ -19,25 +19,31 @@ export async function deleteCabin(id) {
   }
 }
 
-export async function insertCabin(cabin) {
+export async function insertEditCabin(cabin, id) {
   // https://crslioynmzlmesorgtdr.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg
+  const hasImagePath = cabin.image?.startsWith(supabase)
   const imagefileName = `${Math.random() * 1000}-${cabin.name}`.replaceAll(
     '/',
     '',
   )
-  const imagePath = cabin.image
-    ? `${SUPABASE_URL}/storage/v1/object/public/cabin-images/${imagefileName}`
-    : ''
+  const imagePath =
+    hasImagePath || cabin.image
+      ? `${SUPABASE_URL}/storage/v1/object/public/cabin-images/${imagefileName}`
+      : ''
 
-  const { data, error } = await supabase
-    .from('cabins')
-    .insert([{ ...cabin, image: imagePath }])
-    .select()
-    .single()
+  let query = supabase.from('cabins')
+
+  // For insert
+  if (!id) {
+    query.insert([{ ...cabin, image: imagePath }])
+  } else {
+    query.update({ ...cabin, image: imagePath }).eq('id', id)
+  }
+  const { data, error } = await query.select().single()
 
   if (error) {
     console.log(error)
-    throw new Error('Error inserting cabin to supabase')
+    throw new Error(`Error ${id ? 'inserting' : 'editing'} cabin in supabase`)
   }
 
   if (!imagePath) return data

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 
-import { insertCabin } from '../../services/apiCabins'
+import { insertEditCabin } from '../../services/apiCabins'
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
 import Button from '../../ui/Button'
@@ -19,7 +19,7 @@ function CreateCabinForm({ cabin = {} }) {
   const { errors } = formState
 
   const { isPending: isCreating, mutate } = useMutation({
-    mutationFn: insertCabin,
+    mutationFn: insertEditCabin,
     onSuccess: () => {
       toast.success('New Cabin added successfully !')
       queryClient.invalidateQueries({
