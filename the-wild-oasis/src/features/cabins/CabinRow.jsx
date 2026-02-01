@@ -91,7 +91,15 @@ export default function CabinRow({
       {showEditForm && (
         <CreateCabinForm
           cabin={{
-            ...{ id, name, maxCapacity, regularPrice, discount, description },
+            ...{
+              id,
+              name,
+              maxCapacity,
+              regularPrice,
+              discount,
+              description,
+              image,
+            },
           }}
         />
       )}

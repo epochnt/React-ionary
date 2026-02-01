@@ -20,14 +20,15 @@ export async function deleteCabin(id) {
 }
 
 export async function insertEditCabin(cabin, id) {
-  // https://crslioynmzlmesorgtdr.supabase.co/storage/v1/object/public/cabin-images/cabin-001.jpg
-  const hasImagePath = cabin.image?.startsWith(supabase)
+  const hasImagePath =
+    typeof cabin.image === 'string' && cabin.image.startsWith(SUPABASE_URL)
   const imagefileName = `${Math.random() * 1000}-${cabin.name}`.replaceAll(
     '/',
     '',
   )
-  const imagePath =
-    hasImagePath || cabin.image
+  const imagePath = hasImagePath
+    ? cabin.image
+    : cabin.image
       ? `${SUPABASE_URL}/storage/v1/object/public/cabin-images/${imagefileName}`
       : ''
 
@@ -35,11 +36,12 @@ export async function insertEditCabin(cabin, id) {
 
   // For insert
   if (!id) {
-    query.insert([{ ...cabin, image: imagePath }])
+    query = query.insert([{ ...cabin, image: imagePath }])
   } else {
-    query.update({ ...cabin, image: imagePath }).eq('id', id)
+    query = query.update({ ...cabin, image: imagePath }).eq('id', id)
   }
-  const { data, error } = await query.select().single()
+
+  const { data, error } = await query.select().maybeSingle()
 
   if (error) {
     console.log(error)
@@ -52,7 +54,7 @@ export async function insertEditCabin(cabin, id) {
     .from('cabin-images')
     .upload(imagefileName, cabin.image)
 
-  if (fileUploadError) {
+  if (fileUploadError && !id) {
     console.log(fileUploadError)
     await deleteCabin(data.id)
   }
