@@ -8,7 +8,7 @@ import FileInput from '../../ui/FileInput'
 import FormRow from '../../ui/FormRow'
 import Textarea from '../../ui/Textarea'
 
-function CreateCabinForm({ cabin = {} }) {
+function CreateCabinForm({ cabin = {}, onClose }) {
   const { isCreating, insert } = useCreateCabin()
   const { isEditing, edit } = useEditCabin()
   const isLoading = isCreating || isEditing
@@ -29,10 +29,22 @@ function CreateCabinForm({ cabin = {} }) {
       edit(
         { cabin: { ...data, image }, id: editId },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset()
+            onClose?.()
+          },
         },
       )
-    else insert({ ...data, image }, { onSuccess: () => reset() })
+    else
+      insert(
+        { ...data, image },
+        {
+          onSuccess: () => {
+            reset()
+            onClose?.()
+          },
+        },
+      )
   }
 
   const onFormError = (err) => {
@@ -40,7 +52,10 @@ function CreateCabinForm({ cabin = {} }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onFormError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onFormError)}
+      type={onClose ? 'modal' : 'regular'}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -110,7 +125,12 @@ function CreateCabinForm({ cabin = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset" disabled={isLoading}>
+        <Button
+          variation="secondary"
+          type="reset"
+          disabled={isLoading}
+          onClick={() => onClose?.()}
+        >
           Cancel
         </Button>
         <Button disabled={isLoading}>

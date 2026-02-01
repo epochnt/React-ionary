@@ -83,7 +83,11 @@ export default function CabinRow({
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{formatCurrency(discount)}</Discount>
+        {discount ? (
+          <Discount>{formatCurrency(discount)}</Discount>
+        ) : (
+          <div>&ndash;</div>
+        )}
         <Row type="horizontal">
           <button onClick={() => deleteCabin(id)}>
             <FaTrashAlt />
