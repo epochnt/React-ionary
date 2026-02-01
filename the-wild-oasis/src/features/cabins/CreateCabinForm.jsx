@@ -8,7 +8,7 @@ import FileInput from '../../ui/FileInput'
 import FormRow from '../../ui/FormRow'
 import Textarea from '../../ui/Textarea'
 
-function CreateCabinForm({ cabin = {}, onClose }) {
+function CreateCabinForm({ cabin = {}, onCloseModal }) {
   const { isCreating, insert } = useCreateCabin()
   const { isEditing, edit } = useEditCabin()
   const isLoading = isCreating || isEditing
@@ -31,7 +31,7 @@ function CreateCabinForm({ cabin = {}, onClose }) {
         {
           onSuccess: () => {
             reset()
-            onClose?.()
+            onCloseModal?.()
           },
         },
       )
@@ -41,7 +41,7 @@ function CreateCabinForm({ cabin = {}, onClose }) {
         {
           onSuccess: () => {
             reset()
-            onClose?.()
+            onCloseModal?.()
           },
         },
       )
@@ -54,7 +54,7 @@ function CreateCabinForm({ cabin = {}, onClose }) {
   return (
     <Form
       onSubmit={handleSubmit(onSubmit, onFormError)}
-      type={onClose ? 'modal' : 'regular'}
+      type={onCloseModal ? 'modal' : 'regular'}
     >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
@@ -129,7 +129,7 @@ function CreateCabinForm({ cabin = {}, onClose }) {
           variation="secondary"
           type="reset"
           disabled={isLoading}
-          onClick={() => onClose?.()}
+          onClick={() => onCloseModal?.()}
         >
           Cancel
         </Button>
