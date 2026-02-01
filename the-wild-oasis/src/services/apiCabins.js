@@ -48,7 +48,7 @@ export async function insertEditCabin(cabin, id) {
     throw new Error(`Error ${id ? 'inserting' : 'editing'} cabin in supabase`)
   }
 
-  if (!imagePath) return data
+  if (!imagePath || hasImagePath) return data
 
   const { error: fileUploadError } = await supabase.storage
     .from('cabin-images')

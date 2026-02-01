@@ -1,8 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
+import { useCreateCabin, useEditCabin } from './hooks'
 
-import { insertEditCabin } from '../../services/apiCabins'
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
 import Button from '../../ui/Button'
@@ -11,53 +9,35 @@ import FormRow from '../../ui/FormRow'
 import Textarea from '../../ui/Textarea'
 
 function CreateCabinForm({ cabin = {} }) {
-  const queryClient = useQueryClient()
+  const { isCreating, insert } = useCreateCabin()
+  const { isEditing, edit } = useEditCabin()
+  const isLoading = isCreating || isEditing
+
   const { id: editId, ...editValues } = cabin
   const { register, handleSubmit, reset, formState, getValues } = useForm({
     defaultValues: editId ? editValues : {},
   })
   const { errors } = formState
 
-  const { isPending: isCreating, mutate: insert } = useMutation({
-    mutationFn: (cabin) => insertEditCabin(cabin),
-    onSuccess: () => {
-      toast.success('New Cabin added successfully !')
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      })
-      reset()
-    },
-    onError: (err) => toast.error(err.message),
-  })
-
-  const { isPending: isEditing, mutate: edit } = useMutation({
-    mutationFn: ({ cabin, id }) => insertEditCabin(cabin, id),
-    onSuccess: () => {
-      toast.success('Cabin edited successfully !')
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      })
-      reset()
-    },
-    onError: (err) => toast.error(err.message),
-  })
-
   const onSubmit = (data) => {
     const image =
       typeof cabin.image === 'string' && cabin.image
         ? cabin.image
         : data.image[0]
-    console.log(image)
 
-    if (editId) edit({ cabin: { ...data, image }, id: editId })
-    else insert({ ...data, image })
+    if (editId)
+      edit(
+        { cabin: { ...data, image }, id: editId },
+        {
+          onSuccess: () => reset(),
+        },
+      )
+    else insert({ ...data, image }, { onSuccess: () => reset() })
   }
 
   const onFormError = (err) => {
     console.log(err)
   }
-
-  const isLoading = isCreating || isEditing
 
   return (
     <Form onSubmit={handleSubmit(onSubmit, onFormError)}>

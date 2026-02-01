@@ -1,10 +1,10 @@
-import styled from 'styled-components'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
-import toast from 'react-hot-toast'
+import { FaTrashAlt, FaPen, FaCopy } from 'react-icons/fa'
+import styled from 'styled-components'
 
 import { formatCurrency } from '../../utils/helpers'
-import { deleteCabin } from '../../services/apiCabins'
+import { useCreateCabin, useDeleteCabin } from './hooks'
+
 import Row from '../../ui/Row'
 import Spinner from '../../ui/Spinner'
 import CreateCabinForm from './CreateCabinForm'
@@ -59,21 +59,22 @@ export default function CabinRow({
     description,
   } = {},
 }) {
-  const queryClient = useQueryClient()
   const [showEditForm, setShowEditForm] = useState(false)
+  const { isDeleting, deleteCabin } = useDeleteCabin()
+  const { isCreating, insert } = useCreateCabin()
 
-  const { isPending: isDeleting, mutate: mutateDeleteCabin } = useMutation({
-    mutationFn: (id) => deleteCabin(id),
-    onSuccess: async () => {
-      toast.success('Cabin deleted successfully')
-      await queryClient.invalidateQueries({ queryKey: ['cabins'] })
-    },
-    onError: (err) => {
-      toast.error(err.message)
-    },
-  })
+  const handleCopy = () => {
+    insert({
+      name: 'Copy of' + name,
+      maxCapacity,
+      regularPrice,
+      discount,
+      image,
+      description,
+    })
+  }
 
-  if (isDeleting) return <Spinner />
+  if (isDeleting || isCreating) return <Spinner />
 
   return (
     <>
@@ -83,9 +84,16 @@ export default function CabinRow({
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
         <Discount>{formatCurrency(discount)}</Discount>
-        <Row>
-          <button onClick={() => mutateDeleteCabin(id)}>Delete</button>
-          <button onClick={() => setShowEditForm((show) => !show)}>Edit</button>
+        <Row type="horizontal">
+          <button onClick={() => deleteCabin(id)}>
+            <FaTrashAlt />
+          </button>
+          <button onClick={() => handleCopy()}>
+            <FaCopy />
+          </button>
+          <button onClick={() => setShowEditForm((show) => !show)}>
+            <FaPen />
+          </button>
         </Row>
       </TableRow>
       {showEditForm && (
