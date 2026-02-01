@@ -126,7 +126,7 @@ function CreateCabinForm({ cabin = {}, onCloseModal }) {
       <FormRow>
         {/* type is an HTML attribute! */}
         <Button
-          variation="secondary"
+          variations="secondary"
           type="reset"
           disabled={isLoading}
           onClick={() => onCloseModal?.()}
