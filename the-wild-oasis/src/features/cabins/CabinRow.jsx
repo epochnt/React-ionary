@@ -79,54 +79,45 @@ export default function CabinRow({
           <div>&ndash;</div>
         )}
         <Row type="horizontal">
-          <button onClick={() => handleCopy()}>
-            <FaCopy />
-          </button>
           <Modal>
-            <Modal.Open opens="edit">
-              <button>
-                {' '}
-                <FaPen />{' '}
-              </button>
-            </Modal.Open>
-            <Modal.Window name="edit">
-              <CreateCabinForm
-                cabin={{
-                  ...{
-                    id,
-                    name,
-                    maxCapacity,
-                    regularPrice,
-                    discount,
-                    description,
-                    image,
-                  },
-                }}
-              />
-            </Modal.Window>
+            <Menus.Menu>
+              <Menus.Toggle id={id} />
+              <Menus.List id={id}>
+                <Menus.Button onClick={handleCopy} icon={<FaCopy />}>
+                  Duplicate
+                </Menus.Button>
+                <Modal.Open opens="edit">
+                  <Menus.Button icon={<FaPen />}>Edit</Menus.Button>
+                </Modal.Open>
 
-            <Modal.Open opens="delete">
-              <button>
-                {' '}
-                <FaTrashAlt />{' '}
-              </button>
-            </Modal.Open>
-            <Modal.Window name="delete">
-              <ConfirmDelete
-                resourceName={name}
-                disabled={isDeleting}
-                onConfirm={() => deleteCabin(id)}
-              />
-            </Modal.Window>
+                <Modal.Open opens="delete">
+                  <Menus.Button icon={<FaTrashAlt />}>Delete</Menus.Button>
+                </Modal.Open>
+              </Menus.List>
+              <Modal.Window name="edit">
+                <CreateCabinForm
+                  cabin={{
+                    ...{
+                      id,
+                      name,
+                      maxCapacity,
+                      regularPrice,
+                      discount,
+                      description,
+                      image,
+                    },
+                  }}
+                />
+              </Modal.Window>
+              <Modal.Window name="delete">
+                <ConfirmDelete
+                  resourceName={name}
+                  disabled={isDeleting}
+                  onConfirm={() => deleteCabin(id)}
+                />
+              </Modal.Window>
+            </Menus.Menu>
           </Modal>
-          <Menus.Menu>
-            <Menus.Toggle id={id} />
-            <Menus.List id={id}>
-              <Menus.Button>Duplicate</Menus.Button>
-              <Menus.Button>Edit</Menus.Button>
-              <Menus.Button>Delete</Menus.Button>
-            </Menus.List>
-          </Menus.Menu>
         </Row>
       </Table.Row>
     </>
