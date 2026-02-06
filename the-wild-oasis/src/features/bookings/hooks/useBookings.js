@@ -9,13 +9,21 @@ export function useBookings() {
   const filter =
     !filterValue || filterValue === 'all' ? null : { status: filterValue }
 
+  const sortByValue = searchParams.get('sortBy')
+  const sortBy =
+    sortByValue &&
+    (() => {
+      const [field, direction] = sortByValue.split('-')
+      return { field, direction }
+    })()
+
   const {
     data: bookings,
     isPending,
     error,
   } = useQuery({
-    queryKey: ['bookings', filter],
-    queryFn: () => getBookings(filter),
+    queryKey: ['bookings', filter, sortBy],
+    queryFn: () => getBookings(filter, sortBy),
     retryOnMount: true,
   })
 
