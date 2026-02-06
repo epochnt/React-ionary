@@ -18,11 +18,9 @@ export async function getBookings(filter, sortBy, page) {
     query = query.order(sortBy.field, { ascending: sortBy.direction === 'asc' })
   }
 
-  console.log(page)
   if (page) {
     let from = (page - 1) * PAGE_SIZE
     let to = page * PAGE_SIZE - 1
-    console.log(from, to)
     query = query.range(from, to)
   }
 

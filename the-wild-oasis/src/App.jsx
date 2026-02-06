@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import GlobalStyles from './styles/GlobalStyles'
 import {
   Account,
+  Booking,
   Bookings,
   Cabins,
   Dashboard,
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: '/', element: <Navigate to="/dashboard" replace /> },
       { path: '/account', element: <Account /> },
       { path: '/bookings', element: <Bookings /> },
+      { path: '/bookings/:id', element: <Booking /> },
       { path: '/cabins', element: <Cabins /> },
       { path: '/dashboard', element: <Dashboard /> },
       { path: '/login', element: <Login /> },
