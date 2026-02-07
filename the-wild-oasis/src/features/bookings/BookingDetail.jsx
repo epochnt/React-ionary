@@ -1,5 +1,10 @@
 import styled from 'styled-components'
 
+import { useNavigate } from 'react-router'
+import { useBooking } from './hooks'
+import { useMoveBack } from '../../hooks/useMoveBack'
+
+import { HiArrowUpOnSquare } from 'react-icons/hi2'
 import BookingDataBox from './BookingDataBox'
 import Row from '../../ui/Row'
 import Heading from '../../ui/Heading'
@@ -9,9 +14,6 @@ import Spinner from '../../ui/Spinner'
 import Button from '../../ui/Button'
 import ButtonText from '../../ui/ButtonText'
 
-import { useBooking } from './hooks'
-import { useMoveBack } from '../../hooks/useMoveBack'
-
 const HeadingGroup = styled.div`
   display: flex;
   gap: 2.4rem;
@@ -20,6 +22,7 @@ const HeadingGroup = styled.div`
 
 function BookingDetail() {
   const { booking = {}, isPending } = useBooking()
+  const navigate = useNavigate()
   const moveBack = useMoveBack()
 
   const { id: bookingId, status } = booking
@@ -45,6 +48,15 @@ function BookingDetail() {
       <BookingDataBox booking={booking} />
 
       <ButtonGroup>
+        {status === 'unconfirmed' && (
+          <Button
+            icon={<HiArrowUpOnSquare />}
+            onClick={() => navigate(`/checkin/${bookingId}`)}
+          >
+            Check In
+          </Button>
+        )}
+
         <Button variations="secondary" onClick={moveBack}>
           Back
         </Button>
