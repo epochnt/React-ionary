@@ -16,22 +16,32 @@ import {
   Users,
 } from './pages'
 import AppLayout from './ui/AppLayout'
+import ProtectedLayout from './ui/ProtectedLayout'
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    path: '/',
     errorElement: <PageNotFound />,
     children: [
-      { path: '/', element: <Navigate to="/dashboard" replace /> },
-      { path: '/account', element: <Account /> },
-      { path: '/bookings', element: <Bookings /> },
-      { path: '/bookings/:id', element: <Booking /> },
-      { path: '/checkin/:id', element: <CheckIn /> },
-      { path: '/cabins', element: <Cabins /> },
-      { path: '/dashboard', element: <Dashboard /> },
+      {
+        element: (
+          <ProtectedLayout>
+            <AppLayout />
+          </ProtectedLayout>
+        ),
+        children: [
+          { path: '/', element: <Navigate to="/dashboard" replace /> },
+          { path: '/account', element: <Account /> },
+          { path: '/bookings', element: <Bookings /> },
+          { path: '/bookings/:id', element: <Booking /> },
+          { path: '/checkin/:id', element: <CheckIn /> },
+          { path: '/cabins', element: <Cabins /> },
+          { path: '/dashboard', element: <Dashboard /> },
+          { path: '/settings', element: <Settings /> },
+          { path: '/users', element: <Users /> },
+        ],
+      },
       { path: '/login', element: <Login /> },
-      { path: '/settings', element: <Settings /> },
-      { path: '/users', element: <Users /> },
     ],
   },
 ])

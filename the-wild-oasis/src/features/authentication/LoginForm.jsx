@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLogin } from './useLogin'
+import { useLogin } from './hooks'
 
 import Button from '../../ui/Button'
 import Form from '../../ui/Form'
