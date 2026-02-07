@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { HiEllipsisVertical } from 'react-icons/hi2'
 import styled from 'styled-components'
 import { useOutsideClick } from '../hooks/useOutsideClick'
+import { useCloseOnScroll } from '../hooks/useCloseOnScroll'
 
 const Menu = styled.div`
   display: flex;
@@ -105,6 +106,8 @@ function Toggle({ id }) {
 function List({ id, children }) {
   const { openId, close, position } = useContext(MenusContext)
   const ref = useOutsideClick(close, true)
+  useCloseOnScroll(openId === id, close, true)
+
   if (openId !== id) return null
 
   return createPortal(
